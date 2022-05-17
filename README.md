@@ -1,1 +1,2 @@
-# Lab2_DirKin_Px_ROS
+# Lab 2 - Direc Kinematics of Phantom X with ROS
+
