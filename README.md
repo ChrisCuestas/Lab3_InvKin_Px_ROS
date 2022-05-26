@@ -23,19 +23,26 @@ Sabiendo que el robot Phantom X posee 4 GDL, de los cuales 3 corresponden a posi
 
 Control de la posición del robot de manera escalada, desde el espacio de la tarea del efector final.
 
-Avance:
+### Avance:
 - Traslación: ------
 - Orientación: ------
 
-Tipos de movimiento:
+### Tipos de movimiento:
 
 1. Traslación en X -> trax
 2. Traslación en Y -> trax
 3. Traslación en Z -> trax
 4. Rotación sobre el eje O del TCP -> rot
 
+### Control por teclado:
+
 |Tecla  |Función                                |
 | ----- | -----                                 |
 |'W'    |Pasa al siguiente tipo de movimiento   |
 |'S'    |Pasa al anterior tipo de movimiento    |
-|'D'    |Movimiento con avance preestablecido de acuerdo al tipo de movimiento seleccionado    |
+|'D'    |Movimiento con avance preestablecido en el sentido positivo de acuerdo al tipo de movimiento seleccionado    |
+|'A'    |Movimiento con avance preestablecido en el sentido negativo de acuerdo al tipo de movimiento seleccionado    |
+
+### Visualización en RViz:
+
+## Video:
