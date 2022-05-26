@@ -1,7 +1,7 @@
 <launch>
-  <arg name="rvizconfig" default="$(find px_robot)/config/config_moveit.rviz"/>
+  <arg name="rvizconfig" default="$(find Lab3_InvKin_Px_ROS)/config/config_moveit.rviz"/>
   
-  <include file="$(find px_test_moveit)/launch/planning_context.launch" >
+  <include file="../px_test_moveit/launch/planning_context.launch" >
     <arg name="load_robot_description" value="true" />
   </include>
 
@@ -11,7 +11,7 @@
 
   <node name="robot_state_test_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
-  <include file="$(find px_test_moveit)/launch/move_group.launch">
+  <include file="$../px_test_moveit//launch/move_group.launch">
     <arg name="allow_trajectory_execution" value="true"/>
     <arg name="moveit_controller_manager" value="fake"/>
     <arg name="fake_execution_type" value="interpolate"/>
