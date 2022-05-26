@@ -29,9 +29,11 @@ Control de la posición del robot de manera escalada, desde el espacio de la tar
 
 ### Tipos de movimiento:
 
+Acontinuación estan enlistados los tipos de movimiento en su respectivo orden.
+
 1. Traslación en X -> trax
-2. Traslación en Y -> trax
-3. Traslación en Z -> trax
+2. Traslación en Y -> tray
+3. Traslación en Z -> traz
 4. Rotación sobre el eje O del TCP -> rot
 
 ### Control por teclado:

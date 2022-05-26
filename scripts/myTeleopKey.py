@@ -3,6 +3,7 @@ from geometry_msgs.msg import Twist
 from turtlesim.srv import TeleportAbsolute, TeleportRelative
 from turtlesim.srv import Spawn
 import termios, sys, os
+import numpy as np
 from numpy import pi 
 
 TERMIOS = termios
@@ -51,26 +52,29 @@ def pubVel(x, z, time):
         pub.publish(vel)
 
 if __name__ == "__main__":
+    translation_step = 1.0
+    rotation_step = 0.01
+    movement_kind = np.array(['trax','tray','traz','rot'])
+    pointer = 0
+
     while 1:
         letter = getkey()
         if(letter ==b'w' or letter == b'W'):
-            print('Adelante')
-            # pubVel(1,0)
-            pubVel(0.4,0,0.05)
+            # Change kind of movement forwards with W key
+            pointer = (pointer + 1)%4
+            print('Changed to {}'.format(movement_kind[pointer]))
         elif(letter ==b's' or letter == b'S'):
-            print('Atrás')
-            pubVel(-0.4,0,0.05)
+            # Change kind of movement backwards with S key
+            pointer = (pointer - 1) if pointer>0 else 3
+            print('Changed to {}'.format(movement_kind[pointer]))
         elif(letter ==b'd' or letter == b'D'):
-            print('Giro derecha')
-            pubVel(0,-0.2,0.05)
+            # Do the selected movement in the positive direction with D key
+            print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
         elif(letter ==b'a' or letter == b'A'):
-            print('Giro izquierda')
-            pubVel(0,0.2,0.05)
-        elif(letter ==b'r' or letter == b'R'):
-            print('Al centro')
-            toCenter()
-        elif(letter ==b' '):
-            print('Giro 180')
-            giro180()
+            # Do the selected movement in the negative direction with A key
+            print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
         if (letter==b'\x1b'):
+            # Escape with ? key
             break
