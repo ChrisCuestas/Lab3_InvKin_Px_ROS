@@ -76,5 +76,5 @@ if __name__ == "__main__":
             print('{} -{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
             # function(movement_kind[pointer],rotation_step if pointer==3 else (-translation_step)))
         if (letter==b'\x1b'):
-            # Escape with __ key
+            # Escape with crtl+z
             break
