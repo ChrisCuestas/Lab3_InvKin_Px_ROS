@@ -35,6 +35,7 @@ Tipos de movimiento:
 4. Rotación sobre el eje O del TCP -> rot
 
 |Tecla  |Función                                |
+| ----- | -----                                 |
 |'W'    |Pasa al siguiente tipo de movimiento   |
 |'S'    |Pasa al anterior tipo de movimiento    |
 |'D'    |Movimiento con avance preestablecido de acuerdo al tipo de movimiento seleccionado    |
