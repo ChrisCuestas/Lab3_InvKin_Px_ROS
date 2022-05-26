@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(lab3_InvKin_Px_ROS)
+project(lab3_invkin_px_ros)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
