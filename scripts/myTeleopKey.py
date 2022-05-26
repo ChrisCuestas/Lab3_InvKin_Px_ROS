@@ -40,16 +40,16 @@ def giro180():
     except rospy.ServiceException:
         pass
 
-def pubVel(x, z, time):
-    pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
-    rospy.init_node('velPub', anonymous=True)
-    vel = Twist()
-    vel.linear.x = x
-    vel.angular.z = z
-    rospy.loginfo(vel)
-    fTime = rospy.Time.now() + rospy.Duration(time)
-    while  rospy.Time.now() < fTime:
-        pub.publish(vel)
+# def pubVel(x, z, time):
+#     pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
+#     rospy.init_node('velPub', anonymous=True)
+#     vel = Twist()
+#     vel.linear.x = x
+#     vel.angular.z = z
+#     rospy.loginfo(vel)
+#     fTime = rospy.Time.now() + rospy.Duration(time)
+#     while  rospy.Time.now() < fTime:
+#         pub.publish(vel)
 
 if __name__ == "__main__":
     translation_step = 1.0
@@ -73,8 +73,8 @@ if __name__ == "__main__":
             # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
         elif(letter ==b'a' or letter == b'A'):
             # Do the selected movement in the negative direction with A key
-            print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-            # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            print('{} -{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            # function(movement_kind[pointer],rotation_step if pointer==3 else (-translation_step)))
         if (letter==b'\x1b'):
-            # Escape with ? key
+            # Escape with __ key
             break
