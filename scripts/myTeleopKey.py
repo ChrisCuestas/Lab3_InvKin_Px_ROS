@@ -51,30 +51,30 @@ def giro180():
 #     while  rospy.Time.now() < fTime:
 #         pub.publish(vel)
 
-if __name__ == "__main__":
-    translation_step = 1.0
-    rotation_step = 0.01
-    movement_kind = np.array(['trax','tray','traz','rot'])
-    pointer = 0
+# if __name__ == "__main__":
+#     translation_step = 1.0
+#     rotation_step = 0.01
+#     movement_kind = np.array(['trax','tray','traz','rot'])
+#     pointer = 0
 
-    while 1:
-        letter = getkey()
-        if(letter ==b'w' or letter == b'W'):
-            # Change kind of movement forwards with W key
-            pointer = (pointer + 1)%4
-            print('Changed to {}'.format(movement_kind[pointer]))
-        elif(letter ==b's' or letter == b'S'):
-            # Change kind of movement backwards with S key
-            pointer = (pointer - 1) if pointer>0 else 3
-            print('Changed to {}'.format(movement_kind[pointer]))
-        elif(letter ==b'd' or letter == b'D'):
-            # Do the selected movement in the positive direction with D key
-            print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-            # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-        elif(letter ==b'a' or letter == b'A'):
-            # Do the selected movement in the negative direction with A key
-            print('{} -{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-            # function(movement_kind[pointer],rotation_step if pointer==3 else (-translation_step)))
-        if (letter==b'\x1b'):
-            # Escape with crtl+z
-            break
+#     while 1:
+#         letter = getkey()
+#         if(letter ==b'w' or letter == b'W'):
+#             # Change kind of movement forwards with W key
+#             pointer = (pointer + 1)%4
+#             print('Changed to {}'.format(movement_kind[pointer]))
+#         elif(letter ==b's' or letter == b'S'):
+#             # Change kind of movement backwards with S key
+#             pointer = (pointer - 1) if pointer>0 else 3
+#             print('Changed to {}'.format(movement_kind[pointer]))
+#         elif(letter ==b'd' or letter == b'D'):
+#             # Do the selected movement in the positive direction with D key
+#             print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+#             # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+#         elif(letter ==b'a' or letter == b'A'):
+#             # Do the selected movement in the negative direction with A key
+#             print('{} -{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+#             # function(movement_kind[pointer],rotation_step if pointer==3 else (-translation_step)))
+#         if (letter==b'\x1b'):
+#             # Escape with crtl+z
+#             break
