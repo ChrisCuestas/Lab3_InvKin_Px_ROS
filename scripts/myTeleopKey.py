@@ -7,7 +7,17 @@ import numpy as np
 from numpy import pi 
 
 TERMIOS = termios
-
+def jointCommand(command, id_num, addr_name, value, time):
+    #rospy.init_node('joint_node', anonymous=False)
+    rospy.wait_for_service('dynamixel_workbench/dynamixel_command')
+    try:        
+        dynamixel_command = rospy.ServiceProxy(
+            '/dynamixel_workbench/dynamixel_command', DynamixelCommand)
+        result = dynamixel_command(command,id_num,addr_name,value)
+        rospy.sleep(time)
+        return result.comm_result
+    except rospy.ServiceException as exc:
+        print(str(exc))
 def getkey():
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
