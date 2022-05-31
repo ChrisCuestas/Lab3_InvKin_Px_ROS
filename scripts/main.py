@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # q =np.array([0,0,45,60])
 
     # Setting the robot in home configuration
-    home()
+    q = home()
 
     # Phantom X model
     l = np.array([14.5, 10.7, 10.7, 9])
