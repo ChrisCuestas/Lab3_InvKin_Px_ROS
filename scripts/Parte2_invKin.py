@@ -4,8 +4,6 @@ import roboticstoolbox as rtb
 from spatialmath import SE3
 from spatialmath.base import *
 
-from scripts.myTeleopKey import q_inv
-
 
 the3 = np.arccos((r**2 - l[2]**2 - l[3]**2)/(2*l[2]*l[3]))
 if np.isreal(the3):
