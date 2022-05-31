@@ -4,6 +4,15 @@ import roboticstoolbox as rtb
 from spatialmath import SE3
 from spatialmath.base import *
 
+l=np.array([1, 2, 3, 4])
+T=np.matrix([[1, 2, 3, 4],[5, 6, 7, 8],[9, 10, 11, 12],[13, 14, 15, 16]])
+Pw = T[0:3, 3]-(l[3]*T[0:3, 2])
+
+q1a=np.artan2(T[1,3],T[0,3])
+q1b=np.artan2(-T[1,3],-T[0,3])
+pxy = np.sqrt(Pw[0]^2 + Pw[1]^2)
+z = Pw[4] - l[0]
+r = np.sqrt(pxy^2 + z^2)
 
 the3 = np.arccos((r**2 - l[1]**2 - l[2]**2)/(2*l[1]*l[2]))
 if np.isreal(the3):
@@ -34,6 +43,7 @@ else:
     q4a = np.NaN
     q4b = np.NaN
 
+q_inv=np.zeros(4)
 q_inv[0,0:4] = np.array([q1a, q2a, q3a, q4a])
 q_inv[1,0:4] = np.array([q1a, q2b, q3b, q4b])
 
