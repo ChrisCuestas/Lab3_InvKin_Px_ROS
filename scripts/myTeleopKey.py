@@ -8,6 +8,7 @@ from numpy import pi
 import roboticstoolbox as rtb
 from spatialmath import SE3
 from spatialmath.base import *
+import time
 
 TERMIOS = termios
 def jointCommand(command, id_num, addr_name, value, time):
@@ -33,6 +34,24 @@ def trajectories(move_kind, step, T0, n):
         T1 = T0 @ SE3(troty(step,"deg"))   # Rotation over the TCP's O axis
     return rtb.ctraj(T0,T1,n)
 
+def grad21024 (num):
+    return 512+(num*(511/180))
+def home(q):
+    # q1=np.array([grad21024(q[0]),grad21024(q[1]),grad21024(q[2]),grad21024(q[3])])
+    # jointCommand('', 6, 'Goal_Position', q1[0], 0.5)
+    # jointCommand('', 7, 'Goal_Position', q1[1], 0.5)
+    # jointCommand('', 8, 'Goal_Position', q1[2], 0.5)
+    # jointCommand('', 9, 'Goal_Position', q1[3], 0.5)
+    time.sleep(0.5)
+def move(q):
+    q1=np.array([grad21024(q[0]),grad21024(q[1]),grad21024(q[2]),grad21024(q[3])])
+    jointCommand('', 6, 'Goal_Position', q1[0], 0.5)
+    jointCommand('', 7, 'Goal_Position', q1[1], 0.5)
+    jointCommand('', 8, 'Goal_Position', q1[2], 0.5)
+    jointCommand('', 9, 'Goal_Position', q1[3], 0.5)
+
+def q_inv():
+    
 def getkey():
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
@@ -76,30 +95,61 @@ def giro180():
 #     while  rospy.Time.now() < fTime:
 #         pub.publish(vel)
 
-# if __name__ == "__main__":
-#     translation_step = 1.0
-#     rotation_step = 0.01
-#     movement_kind = np.array(['trax','tray','traz','rot'])
-#     pointer = 0
+if __name__ == "__main__":
+    # jointCommand('', 6, 'Torque_Limit', 600, 0)
+    # jointCommand('', 7, 'Torque_Limit', 500, 0)
+    # jointCommand('', 8, 'Torque_Limit', 400, 0)
+    # jointCommand('', 9, 'Torque_Limit', 400, 0)
+    q =np.array([0,0,45,60])
+    home(q)
+    l = np.array([14.5, 10.7, 10.7, 9])
+    qlims = np.array([[-3*np.pi/4, 3*np.pi/4],[-3*np.pi/4, 3*np.pi/4],[-3*np.pi/4, 3*np.pi/4],[-3*np.pi/4, 3*np.pi/4]])
+    robot = rtb.DHRobot(
+    [rtb.RevoluteDH(alpha=np.pi/2, d=l[0], qlim=qlims[0,:]),
+    rtb.RevoluteDH(a=l[1], offset=np.pi/2, qlim=qlims[0,:]),
+    rtb.RevoluteDH(a=l[2], qlim=qlims[0,:]),
+    rtb.RevoluteDH(qlim=qlims[0,:])],
+    name="Px_DH_std")
+    robot.tool = transl(l[3],0,0).dot(troty(np.pi/2).dot(trotz(-np.pi/2)))
+    # print(robot)
+    qt = np.deg2rad(q)
+    Tt = robot.fkine(qt)
+    Tactual=Tt
+    
 
-#     while 1:
-#         letter = getkey()
-#         if(letter ==b'w' or letter == b'W'):
-#             # Change kind of movement forwards with W key
-#             pointer = (pointer + 1)%4
-#             print('Changed to {}'.format(movement_kind[pointer]))
-#         elif(letter ==b's' or letter == b'S'):
-#             # Change kind of movement backwards with S key
-#             pointer = (pointer - 1) if pointer>0 else 3
-#             print('Changed to {}'.format(movement_kind[pointer]))
-#         elif(letter ==b'd' or letter == b'D'):
-#             # Do the selected movement in the positive direction with D key
-#             print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-#             # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-#         elif(letter ==b'a' or letter == b'A'):
-#             # Do the selected movement in the negative direction with A key
-#             print('{} -{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-#             # function(movement_kind[pointer],rotation_step if pointer==3 else (-translation_step)))
-#         if (letter==b'\x1b'):
-#             # Escape with crtl+z
-#             break
+
+    translation_step = 1.0
+    rotation_step = 0.01
+    movement_kind = np.array(['trax','tray','traz','rot'])
+    pointer = 0
+    n = 10
+
+    while 1:
+        letter = getkey()
+        if(letter ==b'w' or letter == b'W'):
+            # Change kind of movement forwards with W key
+            pointer = (pointer + 1)%4
+            print('Changed to {}'.format(movement_kind[pointer]))
+        elif(letter ==b's' or letter == b'S'):
+            # Change kind of movement backwards with S key
+            pointer = (pointer - 1) if pointer>0 else 3
+            print('Changed to {}'.format(movement_kind[pointer]))
+        elif(letter ==b'd' or letter == b'D'):
+            # Do the selected movement in the positive direction with D key
+
+            print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            Camino=trajectories(movement_kind[pointer],rotation_step if pointer==3 else translation_step,Tactual,n)
+            i=0
+            while i<n:
+                qs=invKM(Camino[i])
+                mov(qs)
+            Tactual=Camino[n]
+
+        elif(letter ==b'a' or letter == b'A'):
+            # Do the selected movement in the negative direction with A key
+            print('{} -{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            # function(movement_kind[pointer],rotation_step if pointer==3 else (-translation_step)))
+        if (letter==b'\x1b'):
+            # Escape with crtl+z
+            break
