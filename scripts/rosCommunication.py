@@ -1,9 +1,10 @@
 # ROS imports
 import termios, sys, os
+import numpy as np
 import rospy
-from geometry_msgs.msg import Twist
+# from geometry_msgs.msg import Twist
 from turtlesim.srv import TeleportAbsolute, TeleportRelative
-from turtlesim.srv import Spawn
+# from turtlesim.srv import Spawn
 
 import time
 
@@ -23,12 +24,13 @@ def jointCommand(command, id_num, addr_name, value, time):
 
 def grad21024 (num):
     return 512+(num*(511/180))
-def home(q):
-    # q1=np.array([grad21024(q[0]),grad21024(q[1]),grad21024(q[2]),grad21024(q[3])])
-    # jointCommand('', 6, 'Goal_Position', q1[0], 0.5)
-    # jointCommand('', 7, 'Goal_Position', q1[1], 0.5)
-    # jointCommand('', 8, 'Goal_Position', q1[2], 0.5)
-    # jointCommand('', 9, 'Goal_Position', q1[3], 0.5)
+def home():
+    q =np.array([0,0,45,60])
+    q1=np.array([grad21024(q[0]),grad21024(q[1]),grad21024(q[2]),grad21024(q[3])])
+    jointCommand('', 6, 'Goal_Position', q1[0], 0.5)
+    jointCommand('', 7, 'Goal_Position', q1[1], 0.5)
+    jointCommand('', 8, 'Goal_Position', q1[2], 0.5)
+    jointCommand('', 9, 'Goal_Position', q1[3], 0.5)
     time.sleep(0.5)
 def move(q):
     q1=np.array([grad21024(q[0]),grad21024(q[1]),grad21024(q[2]),grad21024(q[3])])
