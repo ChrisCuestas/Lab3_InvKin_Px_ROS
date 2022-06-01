@@ -8,13 +8,13 @@ def q_invs(l, T):
     # T=np.matrix([[1, 2, 3, 4],[5, 6, 7, 8],[9, 10, 11, 12],[13, 14, 15, 16]])
     Pw = T[0:3, 3]-(l[3]*T[0:3, 2])
 
-    q1a=np.artan2(T[1,3],T[0,3])
-    q1b=np.artan2(-T[1,3],-T[0,3])
-    pxy = np.sqrt(Pw[0]^2 + Pw[1]^2)
-    z = Pw[4] - l[0]
-    r = np.sqrt(pxy^2 + z^2)
+    q1a=np.arctan2(T[1,3],T[0,3])
+    q1b=np.arctan2(-T[1,3],-T[0,3])
+    pxy = np.sqrt(int(Pw[0])^2 + int(Pw[1])^2)
+    z = int(Pw[2]) - int(l[0])
+    r = np.sqrt(int(pxy)^2 + int(z)^2)
 
-    the3 = np.arccos((r**2 - l[1]**2 - l[2]**2)/(2*l[1]*l[2]))
+    the3 = np.arccos((r*2 - l[1]2 - l[2]*2)/(2*l[1]*l[2]))
     if np.isreal(the3):
         alp = np.arctan2(z,pxy)
         the2a = alp - np.arctan2(l[2]*np.sin(the3),l[1]+l[2]*np.cos(the3))
@@ -29,7 +29,8 @@ def q_invs(l, T):
         q3b = -the3;                # q3
 
         # Orientacion
-        R_p = ((rotz(q1a)).transpose)@T[0:3,0:3]
+        
+        R_p = np.transpose(rotz(q1a))@T[0:3,0:3]
         pitch = np.arctan2(R_p[2,0],R_p[0,0])
         # Codo abajo
         q4a = pitch - (q2a + q3a)   # q4
