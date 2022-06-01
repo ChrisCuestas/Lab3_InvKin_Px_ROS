@@ -1,5 +1,5 @@
 <launch>
-  <arg name="rvizconfig" default="$(find Lab3_InvKin_Px_ROS)/config/config_moveit.rviz"/>
+  <arg name="rvizconfig" default="$(find lab3_invkin_px_ros)/config/config_moveit.rviz"/>
   
   <include file="../px_test_moveit/launch/planning_context.launch" >
     <arg name="load_robot_description" value="true" />

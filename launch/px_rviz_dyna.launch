@@ -1,8 +1,8 @@
 <launch>
   <!-- Argumentos -->
-  <arg name="model" default="$(find Lab3_InvKin_Px_ROS)/urdf/px_collision.urdf"/>
+  <arg name="model" default="$(find lab3_invkin_px_ros)/urdf/px_collision.urdf"/>
   <arg name="gui" default="false" />
-  <arg name="rvizconfig" default="$(find Lab3_InvKin_Px_ROS)/config/config.rviz" />
+  <arg name="rvizconfig" default="$(find lab3_invkin_px_ros)/config/config.rviz" />
   
   <!-- Carga el robot -->
   <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>
