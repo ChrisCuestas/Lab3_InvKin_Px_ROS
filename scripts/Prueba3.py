@@ -4,7 +4,8 @@ from matplotlib.pyplot import pause
 #from geometry_msgs.msg import Twist
 #from turtlesim.srv import TeleportAbsolute, TeleportRelative
 #from turtlesim.srv import Spawn
-import termios, sys, os
+# import termios, sys, os
+import sys, os
 import numpy as np
 from numpy import pi, rad2deg 
 #from sympy.matrices import *
@@ -14,7 +15,7 @@ from spatialmath.base import *
 import time
 #from dynamixel_workbench_msgs.srv import DynamixelCommand
 
-TERMIOS = termios
+# TERMIOS = termios
 # def jointCommand(command, id_num, addr_name, value, time):
 #     rospy.init_node('joint_node', anonymous=False)
 #     rospy.wait_for_service('dynamixel_workbench/dynamixel_command')
@@ -34,7 +35,8 @@ def trajectories(move_kind, step, T0, n):
         # print(T0[0,3])
         # T0[0,3]=step+np.float(T0[0,3])
         # print(T0[0,3])
-        T1=T0 @ SE3(transl(step,0,0))
+        T1 = T0
+        T1[0,3]=T0[0,3] + step
         # + SE3(np.array([[0, 0, 0, step],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 1]]))
         print(T1)
     elif move_kind == "tray":
@@ -75,14 +77,14 @@ def q_invs(l, T):
 
     q1a=np.arctan2(T[1,3],T[0,3])
     q1b=np.arctan2(-T[1,3],-T[0,3])
-    print(Pw[0])
+    # print(Pw[0])
     pxy = np.sqrt((float(Pw[0]))**2 +(float(Pw[1]))**2)
     z = float(Pw[2]) - float(l[0])
     r = np.sqrt(pxy**2 + z**2)
-    print((r**2 - float(l[1])**2 - float(l[2])**2)/(2*float(l[1])*float(l[2])))
+    # print((r**2 - float(l[1])**2 - float(l[2])**2)/(2*float(l[1])*float(l[2])))
     the3 = np.arccos((r**2 - (float(l[1]))**2 - (float(l[2]))**2)/(2*float(l[1])*float(l[2])))
-    print("the3")
-    print(the3)
+    # print("the3")
+    # print(the3)
     if np.isreal(the3):
         alp = np.arctan2(z,pxy)
         the2a = alp - np.arctan2(float(l[2])*np.sin(the3),float(l[1])+float(l[2])*np.cos(the3))
@@ -97,12 +99,15 @@ def q_invs(l, T):
 
         # Orientacion
         
-        R_p = np.transpose(rotz(q1a))@T[0:3,0:3]
-        pitch = np.arctan2(float(R_p[2,0]),float(R_p[0,0]))
+        R_p = np.transpose(rotz(q1a)*rotx(np.pi/2)*rotz(q2a+q3a))@T[0:3,0:3]
+        pitch = np.arctan2(float(R_p[0,2]),float(R_p[0,0]))
+        print((R_p))
+        print(pitch)
         # Codo abajo
         q4a = pitch - (q2a + q3a)   # q4
         # Codo arriba
         q4b = pitch - (q2b + q3b)   # q4
+        
     else:
         q2a = np.NaN
         q2b = np.NaN
@@ -134,20 +139,20 @@ def q_invs(l, T):
     # return (q_inv)
     
     
-def getkey():
-    fd = sys.stdin.fileno()
-    old = termios.tcgetattr(fd)
-    new = termios.tcgetattr(fd)
-    new[3] = new[3] & ~TERMIOS.ICANON & ~TERMIOS.ECHO
-    new[6][TERMIOS.VMIN] = 1
-    new[6][TERMIOS.VTIME] = 0
-    termios.tcsetattr(fd, TERMIOS.TCSANOW, new)
-    c = None
-    try:
-        c = os.read(fd, 1)
-    finally:
-        termios.tcsetattr(fd, TERMIOS.TCSAFLUSH, old)
-    return c
+# def getkey():
+#     fd = sys.stdin.fileno()
+#     old = termios.tcgetattr(fd)
+#     new = termios.tcgetattr(fd)
+#     new[3] = new[3] & ~termios.ICANON & ~TERMIOS.ECHO
+#     new[6][TERMIOS.VMIN] = 1
+#     new[6][TERMIOS.VTIME] = 0
+#     termios.tcsetattr(fd, TERMIOS.TCSANOW, new)
+#     c = None
+#     try:
+#         c = os.read(fd, 1)
+#     finally:
+#         termios.tcsetattr(fd, TERMIOS.TCSAFLUSH, old)
+#     return c
 
 # def toCenter():
 #     rospy.wait_for_service('/turtle1/teleport_absolute')
@@ -191,100 +196,108 @@ if __name__ == "__main__":
     # jointCommand('', 9, 'Torque_Limit', 500, 0)
     # q =np.array([0,-10,-45,-45])
     # home(q)
-    q =np.array([0,-70,-90,-55])
+    q =np.array([0,-70,-90,-90])
     home(q)
     l = np.array([14.5, 10.7, 10.7, 10])
     qlims = np.array([[-3*np.pi/4, 3*np.pi/4],[-3*np.pi/4, 3*np.pi/4],[-3*np.pi/4, 3*np.pi/4],[-3*np.pi/4, 3*np.pi/4]])
     robot = rtb.DHRobot(
-    [rtb.RevoluteDH(alpha=np.pi/2, d=l[0], qlim=qlims[0,:]),
-    rtb.RevoluteDH(a=l[1], offset=np.pi/2, qlim=qlims[0,:]),
-    rtb.RevoluteDH(a=l[2], qlim=qlims[0,:]),
-    rtb.RevoluteDH(qlim=qlims[0,:])],
-    name="Px_DH_std")
-    # robot.tool = transl(l[3],0,0).dot(troty(np.pi/2).dot(trotz(-np.pi/2)))
-    robot.tool=np.matrix([[0, 0, 1, float(l[3])],[-1, 0, 0, 0],[0, -1, 0, 0],[0, 0, 0, 1]])
-    # print(robot)
+        [rtb.RevoluteDH(alpha=np.pi/2, d=l[0], qlim=qlims[0,:]),
+        rtb.RevoluteDH(a=l[1], offset=np.pi/2, qlim=qlims[0,:]),
+        rtb.RevoluteDH(a=l[2], qlim=qlims[0,:]),
+        rtb.RevoluteDH(qlim=qlims[0,:])],
+        name="Px_DH_std")
+    robot.tool = transl(l[3],0,0).dot(troty(np.pi/2).dot(trotz(-np.pi/2)))
+    # robot.tool=np.matrix([[0, 0, 1, float(l[3])],[-1, 0, 0, 0],[0, -1, 0, 0],[0, 0, 0, 1]])
+    print(robot)
     qt = np.deg2rad(q)
+    print("Original q")
+    print(qt)
     Tt = robot.fkine(qt)
-    Tactual=np.array(Tt)
-    print("Tt")
-    print(np.matrix(Tt))
+    # Tactual=np.array(Tt)
+    Tactual = np.array([[-0.8192,0,-0.5736, 6],[0,1,0,2],[0.5736,0,-0.8192,1],[0,0,0,1]])
+
+    # print("MTH para q")
+    # print(np.matrix(Tt))
+    # print("q calculada")
+    # print(q_invs(l, np.matrix(Tactual)))
 
     # mov1(SE3(Tactual))
     translation_step = 1
     rotation_step = 5
     movement_kind = np.array(['trax','tray','traz','rot'])
     pointer = 0
-    n = 3
+    n = 2
 
-    while 1:
-        letter = getkey()
-        if(letter ==b'w' or letter == b'W'):
-            # Change kind of movement forwards with W key
-            pointer = (pointer + 1)%4
-            print('Changed to {}'.format(movement_kind[pointer]))
-        elif(letter ==b's' or letter == b'S'):
-            # Change kind of movement backwards with S key
-            pointer = (pointer - 1) if pointer>0 else 3
-            print('Changed to {}'.format(movement_kind[pointer]))
-        elif(letter ==b'd' or letter == b'D'):
-            # Do the selected movement in the positive direction with D key
+    
+    tray = trajectories("trax",translation_step,np.matrix(Tactual),n)
 
-            print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-            # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-            Camino=trajectories(movement_kind[pointer],rotation_step if pointer==3 else translation_step,SE3(Tactual),n)
-            i=0
-            # qs=q_invs(l, np.matrix(Camino[n-1]))[1]
-            # qs=rad2deg(qs)
-            # print("qs")
-            # print(qs)
-            # move (qs)
-            # print("Camino1")
-            # print(Camino[0])
-            # print("Camino2")
-            # print(Camino[1])
-            # print("Caminon-1")
-            # print(Camino[n-1])
-            while i<n:
-                qs=q_invs(l, np.matrix(Camino[i]))[1]
-                qss=np.array([rad2deg(qs[0]),rad2deg(qs[1]),rad2deg(qs[2]),rad2deg(qs[3])])
-                print(qs)
-                move(qss)
-                print("estoysumando")
-                print(Camino[i])
-                i=i+1
+    # while 1:
+        # letter = getkey()
+        # if(letter ==b'w' or letter == b'W'):
+        #     # Change kind of movement forwards with W key
+        #     pointer = (pointer + 1)%4
+        #     print('Changed to {}'.format(movement_kind[pointer]))
+        # elif(letter ==b's' or letter == b'S'):
+        #     # Change kind of movement backwards with S key
+        #     pointer = (pointer - 1) if pointer>0 else 3
+        #     print('Changed to {}'.format(movement_kind[pointer]))
+        # elif(letter ==b'd' or letter == b'D'):
+        #     # Do the selected movement in the positive direction with D key
+
+        #     print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+        #     # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+        #     Camino=trajectories(movement_kind[pointer],rotation_step if pointer==3 else translation_step,SE3(Tactual),n)
+        #     i=0
+        #     # qs=q_invs(l, np.matrix(Camino[n-1]))[1]
+        #     # qs=rad2deg(qs)
+        #     # print("qs")
+        #     # print(qs)
+        #     # move (qs)
+        #     # print("Camino1")
+        #     # print(Camino[0])
+        #     # print("Camino2")
+        #     # print(Camino[1])
+        #     # print("Caminon-1")
+        #     # print(Camino[n-1])
+        #     while i<n:
+        #         qs=q_invs(l, np.matrix(Camino[i]))[1]
+        #         qss=np.array([rad2deg(qs[0]),rad2deg(qs[1]),rad2deg(qs[2]),rad2deg(qs[3])])
+        #         print(qs)
+        #         move(qss)
+        #         print("estoysumando")
+        #         print(Camino[i])
+        #         i=i+1
             
-            Tactual=Camino[n-1]
+        #     Tactual=Camino[n-1]
 
-        elif(letter ==b'a' or letter == b'A'):
-            # Do the selected movement in the negative direction with A key
-            print('{} -{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
-            Camino=trajectories(movement_kind[pointer],-rotation_step if pointer==3 else -translation_step,SE3(Tactual),n)
-            i=0
-            # qs=q_invs(l, np.matrix(Camino[n-1]))[1]
-            # qs=rad2deg(qs)
-            # print("qs")
-            # print(qs)
-            # move (qs)
-            # print("Camino1")
-            # print(Camino[0])
-            # print("Camino2")
-            # print(Camino[1])
-            # print("Caminon-1")
-            # print(Camino[n-1])
-            while i<n:
-                qs=q_invs(l, np.matrix(Camino[i]))[1]
+        # elif(letter ==b'a' or letter == b'A'):
+        #     # Do the selected movement in the negative direction with A key
+        #     print('{} -{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+        #     Camino=trajectories(movement_kind[pointer],-rotation_step if pointer==3 else -translation_step,SE3(Tactual),n)
+        #     i=0
+        #     # qs=q_invs(l, np.matrix(Camino[n-1]))[1]
+        #     # qs=rad2deg(qs)
+        #     # print("qs")
+        #     # print(qs)
+        #     # move (qs)
+        #     # print("Camino1")
+        #     # print(Camino[0])
+        #     # print("Camino2")
+        #     # print(Camino[1])
+        #     # print("Caminon-1")
+        #     # print(Camino[n-1])
+        #     while i<n:
+        #         qs=q_invs(l, np.matrix(Camino[i]))[1]
             
-                qss=np.array([rad2deg(qs[0]),rad2deg(qs[1]),rad2deg(qs[2]),rad2deg(qs[3])])
+        #         qss=np.array([rad2deg(qs[0]),rad2deg(qs[1]),rad2deg(qs[2]),rad2deg(qs[3])])
                 
-                move(qss)
-                print("estoyrestando")
-                print(Camino[i])
-                i=i+1
+        #         move(qss)
+        #         print("estoyrestando")
+        #         print(Camino[i])
+        #         i=i+1
             
-            Tactual=Camino[n-1]
-            # function(movement_kind[pointer],rotation_step if pointer==3 else (-translation_step)))
-        if (letter==b'\x1b'):
-            # Escape with crtl+z
-            break
-        
+        #     Tactual=Camino[n-1]
+        #     # function(movement_kind[pointer],rotation_step if pointer==3 else (-translation_step)))
+        # if (letter==b'\x1b'):
+        #     # Escape with crtl+z
+        #     break
