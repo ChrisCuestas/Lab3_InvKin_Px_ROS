@@ -24,8 +24,3 @@ end
 %% Espacio de trabajo Phantom X
 q = deg2rad([0, 0, 0, 0]);
 % Para q2
-for a = 0:10:350
-    q(2) = a;
-    PhantomX.plot(q,'notiles','noname');
-    T = PhantomX.fkine(q);
-    Pos = T(1:3,4)
