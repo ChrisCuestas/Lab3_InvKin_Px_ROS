@@ -25,7 +25,7 @@ Control de la posición del robot de manera escalada, desde el espacio de la tar
 
 ### Avance:
 En el codigo definimos ```Camino=trayectories(move_kind, step, T0, n)```. Donde `move_kind` define si el movimiento es translacional en x, y, ó z, o rotacional. El `step` sera el valor de avance o retroceso que se fijó, tanto de translacion como de rotación. El `T0` es la pose actual del TCP. `n` es el numero de trayectorias intermedias entre la pose Actual y la pose Objetivo. Esta función retorna una matriz de poses `Camino` que conformaran la ruta que hara el TCP para realizar la translación o rotación.
-Una vez definida la ruta `Camino` se utiliza la funcion `qs=q_invs(l, Camino[i])` donde ``l sera la longitud entre la posicion de la muñeca del robot , y el TCP, Camino[i] sera la pose iesima de la matriz de poses de la ruta. Y la funcion dara 4 diferentes soluciones para alcanzar la pose de `Camino[i]` donde cada una contiene 4 valores de articulación.
+Una vez definida la ruta `Camino` se utiliza la funcion `qs=q_invs(l, Camino[i])` donde `l` sera la longitud entre la posición de la muñeca del robot , y el TCP, Camino[i] sera la pose iesima de la matriz de poses de la ruta. Y la funcion dara 4 diferentes soluciones para alcanzar la pose de `Camino[i]` donde cada una contiene 4 valores de articulación.
 Se realiza un ciclo para obtener los valores de articulacón de una solución en especifico de cada una de las poses de `Camino[i]`. se llama en cada ciclo la funcion `move(qs)` que recibe los valores de articulacion y generan el moviento del robot.
 Por ultimo la pose objetivo pasa a ser la pose actual para repetir el proceso cuando sea necesario. 
 
@@ -35,7 +35,7 @@ Una vez obtenida la pose objetivo se utiliza `rtb.ctraj(T0,T1,n)` funcion que ge
 
 #### Orientación: 
 Para la orientación se define una rotación de 15° y -15° del TCP alrededor del eje Y o tambien del eje O.
-Para la orientacion se multiplica la pose actiual T0 por la matriz de rotacion en el eje y del el paso definido, y se obtine la matriz objetivo de T1.
+Para la orientación se multiplica la pose actiual T0 por la matriz de rotación en el eje y del el paso definido, y se obtine la matriz objetivo de T1.
 Una vez obtenida la pose objetivo se utiliza `rtb.ctraj(T0,T1,n)` funcion que genera una matriz de n poses intermedias desde T0 hasta T1.
 ### Tipos de movimiento:
 
