@@ -12,20 +12,70 @@ ws = [-50 50];
 q = deg2rad([0, -70, -90, -55]);
 PhantomX.plot(q,'notiles','noname');
 hold on
-trplot(eye(4),'rgb','arrow','length',15,'frame','0')
-axis([repmat(ws,1,2) 0 60])
+% trplot(eye(4),'rgb','arrow','length',15,'frame','0')
+axis([repmat(ws,1,2) -20 60])
 % PhantomX.teach()
 %%
-M = eye(4);
-for i=1:PhantomX.n
-    M = M * L(i).A(q(i));
-    trplot(M,'rgb','arrow','frame',num2str(i),'length',15)
-end
+% M = eye(4);
+% for i=1:PhantomX.n
+%     M = M * L(i).A(q(i));
+%     trplot(M,'rgb','arrow','frame',num2str(i),'length',15)
+% end
 %% Espacio de trabajo Phantom X
-q = deg2rad([0, 0, 0, 0]);
+
+q = [0, -3*pi/4, -3*pi/4, 0];
+for c = -3*pi/4:0.2:3*pi/4
+    q(4) = c;
+    PhantomX.plot(q,'notiles','noname');
+    T = PhantomX.fkine(q);
+    Pos = T(1:3,4);
+    plot3(Pos(1),Pos(2),Pos(3),'x')
+end
+for b = -3*pi/4:0.2:3*pi/4
+    q(3) = b;
+    PhantomX.plot(q,'notiles','noname');
+    T = PhantomX.fkine(q);
+    Pos = T(1:3,4);
+    plot3(Pos(1),Pos(2),Pos(3),'x')
+end
+for c = -3*pi/4:0.2:3*pi/4
+    q(4) = c;
+    PhantomX.plot(q,'notiles','noname');
+    T = PhantomX.fkine(q);
+    Pos = T(1:3,4);
+    plot3(Pos(1),Pos(2),Pos(3),'x')
+end
+
+q = [0, 3*pi/4, 0, 0];
+for c = -3*pi/4:0.2:3*pi/4
+    q(4) = c;
+    PhantomX.plot(q,'notiles','noname');
+    T = PhantomX.fkine(q);
+    Pos = T(1:3,4);
+    plot3(Pos(1),Pos(2),Pos(3),'x')
+end
+for b = -3*pi/4:0.2:3*pi/4
+    q(3) = b;
+    PhantomX.plot(q,'notiles','noname');
+    T = PhantomX.fkine(q);
+    Pos = T(1:3,4);
+    plot3(Pos(1),Pos(2),Pos(3),'x')
+end
+for c = -3*pi/4:0.2:3*pi/4
+    q(4) = c;
+    PhantomX.plot(q,'notiles','noname');
+    T = PhantomX.fkine(q);
+    Pos = T(1:3,4);
+    plot3(Pos(1),Pos(2),Pos(3),'x')
+end
+
+
+q = [0, 0, 0, 0];
 % Para q2
-for a = 0:10:350
+for a = -3*pi/4:0.2:3*pi/4
     q(2) = a;
     PhantomX.plot(q,'notiles','noname');
     T = PhantomX.fkine(q);
-    Pos = T(1:3,4)
+    Pos = T(1:3,4);
+    plot3(Pos(1),Pos(2),Pos(3),'x')
+end
