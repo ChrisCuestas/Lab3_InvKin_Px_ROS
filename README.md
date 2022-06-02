@@ -21,16 +21,21 @@ Sabiendo que el robot Phantom X posee 4 GDL, de los cuales 3 corresponden a posi
 
 ## ROS - Aplicación de movimiento en el espacio de la tarea
 
-Control de la posición del robot de manera escalada, desde el espacio de la tarea del efector final.
+Control de la posición del robot de manera escalada, desde el espacio de la tarea del efector final. Se realiza el script Punto3.py que permite realizar movimientos en los ejes x,y,z de TCP (ToolCenterPoint).  
 
 ### Avance:
-- Traslación: ------
-- Orientación: ------
+En el codigo definimos ```trayectories(move kind, step, T0, n)```
+
+#### Traslación: 
+Para la translación se fija un avance de 1 mm tanto en el sentido positivo como en el sentido negativo.
+
+
+#### Orientación: 
+Para la orientación se define una rotación de 15° y -15° del TCP alrededor del eje Y o tambien del eje O.
 
 ### Tipos de movimiento:
 
 Acontinuación estan enlistados los tipos de movimiento en su respectivo orden.
-
 1. Traslación en X -> trax
 2. Traslación en Y -> tray
 3. Traslación en Z -> traz
