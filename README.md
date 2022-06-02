@@ -60,7 +60,55 @@ def trajectories(move_kind, step, T0, n):
     print("prueba T1")
     print(T1)
     return rtb.ctraj(T0,T1,n)
-```    
+```  
+```python
+def q_invs(l, T):
+    
+    Pw = T[0:3, 3]-(float(l[3])*T[0:3, 2])
+    q1a=np.arctan2(T[1,3],T[0,3])
+    q1b=np.arctan2(-T[1,3],-T[0,3])
+    pxy = np.sqrt((float(Pw[0]))**2 +(float(Pw[1]))**2)
+    z = float(Pw[2]) - float(l[0])
+    r = np.sqrt(pxy**2 + z**2)
+    the3 = np.arccos((r**2 - (float(l[1]))**2 - (float(l[2]))**2)/(2*float(l[1])*float(l[2])))
+    if np.isreal(the3):
+        alp = np.arctan2(z,pxy)
+        the2a = alp - np.arctan2(float(l[2])*np.sin(the3),float(l[1])+float(l[2])*np.cos(the3))
+        the2b = alp + np.arctan2(float(l[2])*np.sin(the3),l[1]+float(l[2])*np.cos(the3))
+        # Codo abajo
+        q2a = -np.pi/2 + the2a      # q2
+        q3a = the3;                 # q3
+
+        #Codo arriba
+        q2b = -np.pi/2 + the2b      # q2
+        q3b = -the3;                # q3
+
+        # Orientacion
+        
+        R_p = np.transpose(rotz(q1a)*rotx(pi/2)*rotz(q2a+q3a))@T[0:3,0:3]
+        pitch = np.arctan2(float(R_p[0,2]),float(R_p[0,0]))
+        # Codo abajo
+        q4a = pitch - (q2a + q3a)   # q4
+        # Codo arriba
+        q4b = pitch - (q2b + q3b)   # q4
+    else:
+        q2a = np.NaN
+        q2b = np.NaN
+        q3a = np.NaN
+        q3b = np.NaN
+        q4a = np.NaN
+        q4b = np.NaN
+
+    q_inv=np.array([[q1a, q2a, q3a, q4a],
+                    [q1a, q2b, q3b, q4b],
+                    [q1b, -q2a, -q3a, -q4a],
+                    [q1b, -q2b, -q3b, -q4b]],dtype=object)
+    for i in range(3):
+        for o in q_inv[i,:]:
+            if np.isnan(o):
+                q_inv[i,:] = np.array([np.NaN,np.NaN,np.NaN,np.NaN])
+    return (q_inv)
+```
 #### Traslación: 
 Para la translación se fija un avance de 1 cm tanto en el sentido positivo como en el sentido negativo. Si es una translación en x la pose T0 que entra en la función se modifica para obtener la pose T1 que es la pose objetivo. Se le suma el `step` a la componente en x del vector de desplazamiento de la pose actual TO y se obtiene de esa forma la pose objetivo T1. Si la translación es en el eje y o en el eje z, se realiza de esta misma manera cambiando la componente del vector de desplazamiento a la que se le suma el `step`.
 Una vez obtenida la pose objetivo se utiliza `rtb.ctraj(T0,T1,n)` funcion que genera una matriz de n poses intermedias desde T0 hasta T1.
