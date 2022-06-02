@@ -135,8 +135,56 @@ Si la tecla es D va a realizar el avance explicado anteriormente, y se le especi
 |'S'    |Pasa al anterior tipo de movimiento    |
 |'D'    |Movimiento con avance preestablecido en el sentido positivo de acuerdo al tipo de movimiento seleccionado    |
 |'A'    |Movimiento con avance preestablecido en el sentido negativo de acuerdo al tipo de movimiento seleccionado    |
+```python
+    while 1:
+        letter = getkey()
+        if(letter ==b'w' or letter == b'W'):
+            # Change kind of movement forwards with W key
+            pointer = (pointer + 1)%4
+            print('Changed to {}'.format(movement_kind[pointer]))
+        elif(letter ==b's' or letter == b'S'):
+            # Change kind of movement backwards with S key
+            pointer = (pointer - 1) if pointer>0 else 3
+            print('Changed to {}'.format(movement_kind[pointer]))
+        elif(letter ==b'd' or letter == b'D'):
+            # Do the selected movement in the positive direction with D key
+            print('{} +{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            # function(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            Camino=trajectories(movement_kind[pointer],rotation_step if pointer==3 else translation_step,(Tactual),n)
+            i=0
+            while i<n:
+                qs=q_invs(l, np.matrix(Camino[i]))[1]
+                qss=np.array([rad2deg(qs[0]),rad2deg(qs[1]),rad2deg(qs[2]),rad2deg(qs[3])])
+                move(qss)
+                i=i+1
+            
+            Tactual=np.array(Camino[n-1])
 
-### Visualización en RViz:
-
+        elif(letter ==b'a' or letter == b'A'):
+            # Do the selected movement in the negative direction with A key
+            print('{} -{}'.format(movement_kind[pointer],rotation_step if pointer==3 else translation_step))
+            Camino=trajectories(movement_kind[pointer],-rotation_step if pointer==3 else -translation_step,(Tactual),n)
+            i=0
+            while i<n:
+                qs=q_invs(l, np.matrix(Camino[i]))[1]
+                qss=np.array([rad2deg(qs[0]),rad2deg(qs[1]),rad2deg(qs[2]),rad2deg(qs[3])])
+                move(qss)
+                i=i+1
+            
+            Tactual=np.array(Camino[n-1])
+            # function(movement_kind[pointer],rotation_step if pointer==3 else (-translation_step)))
+        if (letter==b'\x1b'):
+            # Escape with crtl+z
+            break
+```
 ## Video:
 Python y ROS - Aplicación de movimiento en el espacio de la tarea: https://youtu.be/pk0PcC_Z0Ls
+En el video se puede observar como se realizan las translaciones en cada uno de los ejes, ademas de la rotacion para el cambio de la orientacion del TCP
+Tambien se puede ver que se realizo la solución codo arriba.
+## Conclusiones:
+- Se necesito realizar un acercamiento al lenguaje de pyton para la manipulacion de matrices y poses, ya que es diferente al manejo que se les ha dado con matlab. Donde se tuvieron problemas con la creacion de la funcion `q_invs` y con la realizacion del pick an place.
+- Se debio recalcular las distancias del eslabon dependiendo del robo que se utilizara, distancias que afectaban las linealidad de las trayectorias del TCP. 
+- El robot utilizado tenia Id's distintos, asi que se reconfiguro el codigo para adaptar los ids al robot disponible. 
+- 
+- 
+
