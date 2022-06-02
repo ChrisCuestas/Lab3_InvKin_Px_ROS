@@ -59,3 +59,4 @@ Si la tecla es D va a realizar el avance explicado anteriormente, y se le especi
 ### Visualización en RViz:
 
 ## Video:
+Python y ROS - Aplicación de movimiento en el espacio de la tarea: https://youtu.be/pk0PcC_Z0Ls
