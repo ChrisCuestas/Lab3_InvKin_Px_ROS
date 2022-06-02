@@ -4,7 +4,7 @@ import rospy
 from geometry_msgs.msg import Twist
 import termios, sys, os
 import numpy as np
-from numpy import pi, rad2deg 
+from numpy import pi, rad2deg
 from sympy.matrices import *
 import roboticstoolbox as rtb
 from spatialmath import SE3
