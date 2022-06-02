@@ -9,7 +9,7 @@
 
 ### Espacio de Trabajo
 
-[![EspacioDeTrabajo](https://github.com/ChrisCuestas/Lab3_InvKin_Px_ROS/blob/main/matlab/EspacioTrabajo.png)]
+[![EspacioDeTrabajo](https://github.com/ChrisCuestas/Lab3_InvKin_Px_ROS/blob/main/matlab/EspacioTrabajo.jpg)]
 
 ## Análisis:
 
