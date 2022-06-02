@@ -7,6 +7,10 @@
 
 ## MATLAB + RTB Toolbox:
 
+### Espacio de Trabajo
+
+[![EspacioDeTrabajo](https://github.com/ChrisCuestas/Lab3_InvKin_Px_ROS/blob/main/matlab/EspacioTrabajo.png)]
+
 ## Análisis:
 
 Sabiendo que el robot Phantom X posee 4 GDL, de los cuales 3 corresponden a posición, el GDL restante proporciona una medida independiente para un ángulo de orientación (asuma orientación en ángulos fijos).
