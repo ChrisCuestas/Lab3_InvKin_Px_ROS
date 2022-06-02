@@ -188,5 +188,8 @@ Tambien se puede ver que se realizo la solución codo arriba.
 ## Conclusiones:
 - Se necesito realizar un acercamiento al lenguaje de pyton para la manipulacion de matrices y poses, ya que es diferente al manejo que se les ha dado con matlab. Donde se tuvieron problemas con la creacion de la funcion `q_invs` y con la realizacion del pick an place.
 - Se debio recalcular las distancias del eslabon dependiendo del robo que se utilizara, distancias que afectaban las linealidad de las trayectorias del TCP. 
-- El robot utilizado tenia Id's distintos, asi que se reconfiguro el codigo para adaptar los ids al robot disponible. 
+- El robot utilizado tenia ID's distintos, asi que se reconfiguro el codigo para adaptar los ids al robot disponible. 
+- La comunicación con cada motor se hace por un mismo bus, con moteres conectados en serie, por lo que cada cambio de postura puede requerir de hasta 4 tiempos, uno para cada motor. 
+- Lo anterior resulta en que no se pueden obtener trayectorias suaves.
+
 
