@@ -12,11 +12,11 @@
 Sabiendo que el robot Phantom X posee 4 GDL, de los cuales 3 corresponden a posición, el GDL restante proporciona una medida independiente para un ángulo de orientación (asuma orientación en ángulos fijos).
 
 ### ¿De qué ángulo de orientación se trata?
-
+El GDl restante es la orientacion de la herramienta, esta orientacion va a ser con respecto al eje Y (Open) de la herramienta, esta orientacion en angulos fijos es el pitch.
 ### ¿Cuántas soluciones posibles existen para la cinemática inversa del manipulador Phantom X ?
-
+Se tendran dos soluciones posibles codo arriba y codo abajo.
 ### ¿En qué consiste el espacio diestro de un manipulador?
-
+El espacio diestro del manipulador consiste los puntos en que el robot puede alcanzar todas las orientaciones posibles del TCP con al menos una solucion.
 ## ROS - Aplicación de Pick and place:
 
 ## ROS - Aplicación de movimiento en el espacio de la tarea
