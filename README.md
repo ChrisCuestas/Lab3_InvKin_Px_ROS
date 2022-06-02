@@ -29,6 +29,38 @@ Una vez definida la ruta `Camino` se utiliza la funcion `qs=q_invs(l, Camino[i])
 Se realiza un ciclo para obtener los valores de articulacón de una solución en especifico de cada una de las poses de `Camino[i]`. se llama en cada ciclo la funcion `move(qs)` que recibe los valores de articulacion y generan el moviento del robot.
 Por ultimo la pose objetivo pasa a ser la pose actual para repetir el proceso cuando sea necesario. 
 
+```python
+def trajectories(move_kind, step, T0, n):
+    if move_kind == "trax":
+        print("estoy moviendo en x")
+        T1= T0*1
+        T1[0,3]=T0[0,3] + step
+        T1=SE3(T1)
+        T0=SE3(T0)
+        # + SE3(np.array([[0, 0, 0, step],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 1]]))
+    elif move_kind == "tray":
+        print("estoy moviendo en y")
+        # T1 = T0 @ SE3(0,step,0)
+        T1=T0*1
+        T1[1,3]=T0[1,3] + step
+        T1=SE3(T1)
+        T0=SE3(T0)
+    elif move_kind == "traz":
+        print("estoy moviendo en z")
+        T1=T0*1
+        T1[2,3]=T0[2,3] + step
+        T1=SE3(T1)
+        T0=SE3(T0)
+    else:
+        T1 = SE3(T0) @ SE3(troty(step,"deg"))   # Rotation over the TCP's O axis
+        T1=SE3(T1)
+        T0=SE3(T0)
+    print("prueba T0")
+    print(T0)
+    print("prueba T1")
+    print(T1)
+    return rtb.ctraj(T0,T1,n)
+```    
 #### Traslación: 
 Para la translación se fija un avance de 1 cm tanto en el sentido positivo como en el sentido negativo. Si es una translación en x la pose T0 que entra en la función se modifica para obtener la pose T1 que es la pose objetivo. Se le suma el `step` a la componente en x del vector de desplazamiento de la pose actual TO y se obtiene de esa forma la pose objetivo T1. Si la translación es en el eje y o en el eje z, se realiza de esta misma manera cambiando la componente del vector de desplazamiento a la que se le suma el `step`.
 Una vez obtenida la pose objetivo se utiliza `rtb.ctraj(T0,T1,n)` funcion que genera una matriz de n poses intermedias desde T0 hasta T1.
