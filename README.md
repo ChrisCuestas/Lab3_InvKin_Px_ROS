@@ -46,7 +46,9 @@ Acontinuación estan enlistados los tipos de movimiento en su respectivo orden.
 4. Rotación sobre el eje O del TCP -> rot
 
 ### Control por teclado:
-
+Para controlar con el teclado se utilizo las mismas funciones que en en Lab1, como `letter=getkey()` que lee el valor de la tecla que se oprime y guarda el valor en `letter`. Se realiza unos condicionales para realizar la funcion dependiendo de la tecla seleccionada, 
+Si la tecla es W se suma 1 a un `pointer` que va a indicar el tipo de movimiento que se quiere realizar, si este sobrepasa el valor de 4 retorna a 1 con la herramienta de modulo, para realizar una seleccion ciclica. Si la tecla es S se resta 1 al `pointer` para devolverse en la indicación del tipo de movimiento.
+Si la tecla es D va a realizar el avance explicado anteriormente, y se le especifica el sentido positivo del `step`. Si la tecla es A va a realizar el avance pero especificando el sentido negativo del `step`.
 |Tecla  |Función                                |
 | ----- | -----                                 |
 |'W'    |Pasa al siguiente tipo de movimiento   |
